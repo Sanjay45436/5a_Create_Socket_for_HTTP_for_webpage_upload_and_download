@@ -16,6 +16,55 @@ To write a PYTHON program for socket for HTTP for web page upload and download
 6.Stop the program
 <BR>
 ## Program 
+
+## Server:
+```
+# Developed by : Sanjay
+# Register Number : 212225040374
+import socket
+s=socket.socket()
+s.bind(("localhost",8080))
+s.listen(1)
+print("Server running...")
+while True:
+    c,addr=s.accept()
+    req=c.recv(1024).decode()
+    print("Request received")
+    if "GET" in req:
+        f=open("index.html","r")
+        res="HTTP/1.1 200 OK\n\n"+f.read()
+        f.close()
+        c.send(res.encode())
+    elif "POST" in req:
+        data=req.split("\n\n")[1]
+        f=open("upload.txt","w")
+        f.write(data)
+        f.close()
+        c.send("HTTP/1.1 200 OK\n\nFile Uploaded".encode())
+    c.close()
+```
+## Client:
+
+```
+# Developed by : Sanjay
+# Register Number : 212225040374
+import socket
+s=socket.socket()
+s.connect(("localhost",8080))
+ch=input("1.Download 2.Upload : ")
+if ch=="1":
+    s.send("GET / HTTP/1.1\nHost: localhost\n\n".encode())
+    print(s.recv(4096).decode())
+else:
+    msg=input("Enter data to upload: ")
+    s.send(("POST / HTTP/1.1\nHost: localhost\n\n"+msg).encode())
+    print(s.recv(1024).decode())
+s.close()
+```
+
 ## OUTPUT
+
+<img width="1881" height="991" alt="image" src="https://github.com/user-attachments/assets/f773ac8a-b5d2-4506-8ccd-7a6b661a12f4" />
+
 ## Result
 Thus the socket for HTTP for web page upload and download created and Executed
